@@ -5,7 +5,8 @@ const api = axios.create({
   baseURL: 'http://localhost:3000/api/todos'
 });
 
-export const fetchTodos = () => api.get('/').then(res => res.data);
+export const fetchTodos = (filter) =>
+  api.get('/', { params: filter }).then(res => res.data);
 
 export const createTodo = (title) =>
   api.post('/', { title }).then(res => res.data);

@@ -14,12 +14,17 @@ const today = new Date().toLocaleDateString(undefined, {
 export default function App() {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
 
   useEffect(() => {
-    fetchTodos()
+    setLoading(true);
+    let params;
+    if (filter === 'active') params = { completed: false };
+    if (filter === 'done') params = { completed: true };
+    fetchTodos(params)
       .then(data => { setTodos(data); setLoading(false); })
       .catch(err => { console.error(err); setLoading(false); });
-  }, []);
+  }, [filter]);
 
   const handleAdd = async (title) => {
     const newTodo = await createTodo(title);
@@ -43,6 +48,18 @@ export default function App() {
 
   return (
     <div className="receipt-page">
+      <div className="filter-tabs">
+        {['all', 'active', 'done'].map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            className={`tab-btn ${filter === tab ? 'active' : ''}`}
+            onClick={() => setFilter(tab)}
+          >
+            {tab.toUpperCase()}
+          </button>
+        ))}
+      </div>
       <div className="receipt">
         <header className="receipt-header">
           <span className="stamp">Tasks</span>
