@@ -1,5 +1,7 @@
 // server.js
 const express = require('express');
+const swaggerUI = require('swagger-ui-express');
+const YAML = require('yamljs');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const todoRoutes = require('./Routes/todoRoutes')
@@ -12,6 +14,9 @@ app.use(cors({
 app.use(express.json());
 
 mongoose.connect('mongodb://localhost:27017/todolist');
+
+const openapi = YAML.load('openapi.yaml');
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(openapi, {explorer: true}));
 
 
 app.use('/api/todos', todoRoutes);
