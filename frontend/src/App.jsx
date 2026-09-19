@@ -1,29 +1,35 @@
 // App.jsx
-import { useState, useEffect } from 'react';
-import TodoForm from './TodoForm';
-import TodoList from './TodoList';
-import { fetchTodos, createTodo, updateTodo, deleteTodo } from './api/todos';
-import './todo.css';
+import { useState, useEffect } from "react";
+import TodoForm from "./todoForm";
+import TodoList from "./todoList";
+import { fetchTodos, createTodo, updateTodo, deleteTodo } from "./api/todos";
+import "./todo.css";
 
 const today = new Date().toLocaleDateString(undefined, {
-  weekday: 'long',
-  month: 'short',
-  day: 'numeric',
+  weekday: "long",
+  month: "short",
+  day: "numeric",
 });
 
 export default function App() {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     setLoading(true);
     let params;
-    if (filter === 'active') params = { completed: false };
-    if (filter === 'done') params = { completed: true };
+    if (filter === "active") params = { completed: false };
+    if (filter === "done") params = { completed: true };
     fetchTodos(params)
-      .then(data => { setTodos(data); setLoading(false); })
-      .catch(err => { console.error(err); setLoading(false); });
+      .then((data) => {
+        setTodos(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
   }, [filter]);
 
   const handleAdd = async (title) => {
@@ -33,27 +39,27 @@ export default function App() {
 
   const handleToggle = async (id, done) => {
     const updated = await updateTodo(id, { done: !done });
-    setTodos(todos.map(t => t._id === id ? updated : t));
+    setTodos(todos.map((t) => (t._id === id ? updated : t)));
   };
 
   const handleRename = async (id, title) => {
     const updated = await updateTodo(id, { title });
-    setTodos(todos.map(t => t._id === id ? updated : t));
+    setTodos(todos.map((t) => (t._id === id ? updated : t)));
   };
 
   const handleRemove = async (id) => {
     await deleteTodo(id);
-    setTodos(todos.filter(t => t._id !== id));
+    setTodos(todos.filter((t) => t._id !== id));
   };
 
   return (
     <div className="receipt-page">
       <div className="filter-tabs">
-        {['all', 'active', 'done'].map((tab) => (
+        {["all", "active", "done"].map((tab) => (
           <button
             key={tab}
             type="button"
-            className={`tab-btn ${filter === tab ? 'active' : ''}`}
+            className={`tab-btn ${filter === tab ? "active" : ""}`}
             onClick={() => setFilter(tab)}
           >
             {tab.toUpperCase()}
